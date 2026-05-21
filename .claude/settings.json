@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"Quote: %{http_code}\\\\n\" http://localhost:3000/quote)",
+      "Bash(ipconfig)",
+      "Bash(ssh -i ~/.ssh/dev_srv_ssh_key -p 2244 mecdev@113.161.93.49 \"md5sum /home/mecdev/apps/mai-uiux/src/app/page.tsx && grep -cE 'Đang kết nối|Mai gọi API' /home/mecdev/apps/mai-uiux/src/app/page.tsx\")"
+    ]
+  }
+}

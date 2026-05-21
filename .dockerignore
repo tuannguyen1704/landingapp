@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.gitignore
+*.log
+*.bak
+*.tsbuildinfo
+.DS_Store
+dev.log
+README.md
+plans
+.claude
+.vscode
+.idea
+Dockerfile
+docker-compose.yml
+.dockerignore

@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Landing page fonts */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;550;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 230 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 230 25% 12%;
+    /* MECSU brand: violet + blue */
+    --primary: 258 65% 38%;          /* deep violet */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 230 25% 12%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 217 91% 60%;            /* bright blue */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 258 65% 55%;              /* violet ring */
+    --radius: 0.625rem;
+  }
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 0%,
+    hsl(var(--accent) / 0.1) 50%,
+    hsl(var(--muted)) 100%
+  );
+  background-size: 1000px 100%;
+  @apply animate-shimmer rounded-md;
+}
+
+/* Stepped loading dots */
+.step-dot {
+  @apply h-1.5 w-1.5 rounded-full bg-blue-600;
+  animation: step-pulse 1.2s infinite ease-in-out;
+}
+.step-dot:nth-child(2) { animation-delay: 0.15s; }
+.step-dot:nth-child(3) { animation-delay: 0.3s; }
+.step-dot:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes step-pulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* Background pattern */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Excel-like grid – mọi cell có border mờ, header có background, alternate banded rows */
+.excel-grid {
+  --grid-line: hsl(220 13% 88%);
+}
+.excel-grid table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+.excel-grid th,
+.excel-grid td {
+  border-right: 1px solid var(--grid-line);
+  border-bottom: 1px solid var(--grid-line);
+  padding: 0.625rem 0.75rem;
+  vertical-align: middle;
+  background: hsl(var(--card));
+}
+.excel-grid thead th {
+  background: linear-gradient(to bottom, hsl(220 14% 97%), hsl(220 13% 94%));
+  font-weight: 600;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: hsl(var(--muted-foreground));
+  border-top: 1px solid var(--grid-line);
+  padding: 0.5rem 0.625rem;
+}
+.excel-grid thead th:first-child,
+.excel-grid tbody td:first-child {
+  border-left: 1px solid var(--grid-line);
+}
+.excel-grid tbody tr:nth-child(even) td {
+  background: hsl(220 25% 99%);
+}
+.excel-grid tbody tr:hover td {
+  background: hsl(217 91% 95% / 0.4) !important;
+}
+.excel-grid tbody tr.expanded-row td {
+  background: hsl(220 25% 98%) !important;
+  border-bottom-color: transparent;
+}
+.excel-grid tbody tr.allocation-row td {
+  padding: 0;
+  background: hsl(220 25% 98%) !important;
+  border-top: none;
+  border-right-color: transparent;
+}
+.excel-grid tbody tr.allocation-row td:first-child {
+  border-left-color: transparent;
+}
+.excel-grid thead th.col-highlight {
+  background: linear-gradient(to bottom, hsl(217 91% 95%), hsl(217 91% 90%));
+  color: hsl(var(--accent));
+}
+
+/* Status indicator border — chỉ 2 màu: emerald (matched) + amber (mọi trạng thái pending) */
+.row-matched > td:first-child { box-shadow: inset 3px 0 0 0 rgb(16 185 129); }
+.row-choose  > td:first-child { box-shadow: inset 3px 0 0 0 rgb(245 158 11); }
+.row-unclear > td:first-child { box-shadow: inset 3px 0 0 0 rgb(245 158 11); }
+.row-missing > td:first-child { box-shadow: inset 3px 0 0 0 rgb(245 158 11); }
+
+/* 2-tone row background: matched = xanh lá nhạt, pending = vàng nhạt, insufficient = đỏ nhạt.
+ * Override cả nth-child banding để màu trạng thái thắng. */
+.excel-grid tbody tr.row-bg-matched td { background: hsl(151 70% 96%) !important; }
+.excel-grid tbody tr.row-bg-pending td { background: hsl(48 100% 96%) !important; }
+.excel-grid tbody tr.row-bg-insufficient td { background: hsl(0 100% 97%) !important; }
+.excel-grid tbody tr.row-bg-matched:hover td { background: hsl(151 70% 92%) !important; }
+.excel-grid tbody tr.row-bg-pending:hover td { background: hsl(48 100% 92%) !important; }
+.excel-grid tbody tr.row-bg-insufficient:hover td { background: hsl(0 100% 94%) !important; }
+
+/* Link bảng ↔ khung chat Mai:
+ * row-chat-active = dòng đang chat (nền tím + viền tím nổi bật)
+ * row-chat-dimmed = các dòng còn lại (làm mờ để focus vào dòng active) */
+.excel-grid tbody tr.row-chat-active td {
+  background: hsl(258 100% 96%) !important;
+}
+.excel-grid tbody tr.row-chat-active:hover td {
+  background: hsl(258 100% 94%) !important;
+}
+.excel-grid tbody tr.row-chat-active > td:first-child {
+  box-shadow: inset 4px 0 0 0 rgb(124 58 237) !important;
+}
+.excel-grid tbody tr.row-chat-dimmed {
+  opacity: 0.4;
+  filter: grayscale(0.35);
+}
+
+/* Khi chat Mai mở → ghim cột Thao tác sang phải để luôn thấy,
+ * cho phép user click ⚡ đổi nhanh dòng đang chat. */
+.excel-grid.chat-open .thao-tac-col {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+}
+.excel-grid.chat-open thead .thao-tac-col {
+  z-index: 3;
+}
+.excel-grid.chat-open .thao-tac-col::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  transform: translateX(-100%);
+  background: linear-gradient(to left, rgb(15 23 42 / 0.12), transparent);
+  pointer-events: none;
+}
+
+/* Brand gradient utility — dùng cho logo, primary CTAs */
+.brand-gradient {
+  background-image: linear-gradient(135deg, hsl(258 70% 55%) 0%, hsl(217 91% 55%) 100%);
+}
+.brand-gradient-text {
+  background-image: linear-gradient(135deg, hsl(258 70% 50%) 0%, hsl(217 91% 50%) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Pulse for AI scanning */
+@keyframes scan {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.scan-line::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, hsl(217 91% 60% / 0.15), transparent);
+  animation: scan 1.6s ease-in-out infinite;
+}
+
+/* Viền sáng xoay theo chiều kim đồng hồ — dùng cho khu vực nhập chính */
+.input-spin-glow {
+  position: relative;
+  padding: 2px;
+  border-radius: 1rem;
+  background-image: linear-gradient(135deg, hsl(258 70% 55%), hsl(217 91% 55%));
+  overflow: hidden;
+  isolation: isolate;
+}
+.input-spin-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 220%;
+  height: 220%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 220deg,
+    hsl(280 100% 78% / 0.95) 290deg,
+    hsl(200 100% 78% / 0.95) 330deg,
+    transparent 360deg
+  );
+  animation: spin-glow 3.5s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes spin-glow {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.input-spin-glow > .inner {
+  position: relative;
+  z-index: 1;
+  background: hsl(var(--card));
+  border-radius: calc(1rem - 2px);
+}
+.input-spin-glow.dragging {
+  background-image: linear-gradient(135deg, hsl(258 70% 60%), hsl(258 70% 60%));
+}
+.input-spin-glow.dragging::before {
+  animation-duration: 1.6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input-spin-glow::before { animation: none; }
+}
+
+/* Hide scrollbar while keeping scroll functionality (cross-browser) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Thin scrollbar helper (already used as Tailwind class in some places) */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 9999px;
+}
