@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, CheckCircle2, FileText, CreditCard, Receipt, Check, Plus } from "lucide-react";
+import { Search, CheckCircle2, FileText, CreditCard, Receipt, Check, Plus, User, LogOut, Settings } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { useAuth } from "@/components/auth-provider";
+import { UserAvatar } from "@/components/user-avatar";
 import { useRequest } from "@/components/request-provider";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +25,22 @@ export function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { reset } = useRequest();
+  const { user, openModal, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const activeIdx = activeIndex(pathname);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [dropdownOpen]);
 
   const handleNewRequest = () => {
     reset();
@@ -110,7 +128,7 @@ export function SiteHeader() {
           })}
         </ol>
 
-        {/* Right cluster: [+ Thêm yêu cầu mới]  [Lịch sử]  — Lịch sử sát mép phải */}
+        {/* Right cluster: [+ Thêm yêu cầu mới] [Lịch sử] [Đăng nhập / User] */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleNewRequest}
@@ -134,6 +152,74 @@ export function SiteHeader() {
             <Receipt className="h-4 w-4" />
             <span className="hidden sm:inline">Lịch sử</span>
           </Link>
+
+          {user ? (
+            /* User dropdown */
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen((o) => !o)}
+                className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full hover:bg-muted transition-colors"
+              >
+                <UserAvatar name={user.name} size="sm" />
+                <span className="hidden sm:inline text-sm font-medium text-foreground max-w-[120px] truncate">
+                  {user.name}
+                </span>
+              </button>
+
+              {dropdownOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                  style={{ boxShadow: "0 10px 40px rgba(0,0,0,0.12)" }}
+                >
+                  {/* User info */}
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <p className="text-sm font-semibold text-slate-900 truncate">{user.name}</p>
+                    <p className="text-xs text-slate-500 truncate mt-0.5">{user.email}</p>
+                  </div>
+
+                  {/* Menu items */}
+                  <div className="py-1">
+                    <Link
+                      href="/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                    >
+                      <User className="h-4 w-4 text-slate-400" />
+                      Tài khoản
+                    </Link>
+                    <Link
+                      href="/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                    >
+                      <Settings className="h-4 w-4 text-slate-400" />
+                      Cài đặt
+                    </Link>
+                  </div>
+
+                  {/* Divider + logout */}
+                  <div className="border-t border-slate-100 pt-1 pb-1">
+                    <button
+                      onClick={() => { setDropdownOpen(false); logout(); }}
+                      className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            /* Login button */
+            <button
+              onClick={() => openModal("login")}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold text-white brand-gradient hover:shadow-md hover:shadow-violet-200 transition-all duration-200"
+            >
+              <User className="h-4 w-4" />
+              <span>Đăng nhập</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

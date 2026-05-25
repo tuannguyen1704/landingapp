@@ -1,4 +1,6 @@
 'use client';
+import { AuthProvider } from '@/components/auth-provider';
+import { AuthModal } from '@/components/auth-modal';
 import { SiteHeader } from '@/components/site-header';
 import { SidebarNav } from '@/components/sidebar-nav';
 
@@ -8,12 +10,13 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <AuthProvider>
       <SiteHeader />
       <SidebarNav />
       <main className="flex-1 md:pl-14">
         {children}
       </main>
-    </>
+      <AuthModal />
+    </AuthProvider>
   );
 }
