@@ -1,10 +1,9 @@
 /**
- * Sample 36-line request đã bóc tách (mock kết quả AI parse từ paste/Excel/Image).
- * 28 dòng matched, 8 dòng cần xử lý (chọn 1-trong-N / unclear / missing).
+ * Sample 5-line request đã bóc tách (mock kết quả AI parse từ paste/Excel/Image).
  */
 
 import type { CatalogItem } from "./catalog";
-import { CATALOG, SUGGESTIONS_MOLET } from "./catalog";
+import { CATALOG } from "./catalog";
 
 export type RequestStatus = "matched" | "choose" | "unclear" | "missing";
 
@@ -57,42 +56,15 @@ export function lineSubtotal(l: RequestLine): number {
 
 export const SAMPLE_LINES: RequestLine[] = [
   { id: "l1",  raw: "Mũi Khoan Thép List 500 Nachi D3.8", qty: 40, unit: "cái", status: "matched", match: CATALOG[0], selected: true, selectedSupplier: "Smart V2" },
-  { id: "l2",  raw: "mỏ lết răng stanley",                  qty: 10, unit: "cái", status: "choose",  suggestions: SUGGESTIONS_MOLET, selected: true },
-  { id: "l3",  raw: "keo chó dán ống",                      qty: 5,  unit: "cái", status: "unclear", reason: "Không rõ tên vật tư. Vui lòng chat để xác nhận.", selected: true },
-  { id: "l4",  raw: "dây xích phi nhỏ",                     qty: 20, unit: "cái", status: "missing", reason: "Thiếu thông số kỹ thuật (size).", selected: true },
-  { id: "l5",  raw: "Mũi khoan bê tông Bosch 8mm",          qty: 5,  unit: "cái", status: "matched", match: CATALOG[1], selected: true, selectedSupplier: "Bosch VN" },
-  { id: "l6",  raw: "Mũi khoan sắt Makita 10mm",            qty: 12, unit: "cái", status: "matched", match: CATALOG[2], selected: true, selectedSupplier: "Makita VN" },
-  { id: "l7",  raw: "Đá cắt sắt Hải Dương 350mm",           qty: 20, unit: "cái", status: "matched", match: CATALOG[3], selected: true, selectedSupplier: "Hải Dương" },
-  { id: "l8",  raw: "Đá mài Bosch 100mm",                   qty: 22, unit: "cái", status: "matched", match: CATALOG[4], selected: true, selectedSupplier: "Bosch VN" },
-  { id: "l9",  raw: "Kìm cắt điện Stanley 150mm",           qty: 15, unit: "cái", status: "matched", match: CATALOG[5], selected: true, selectedSupplier: "Stanley VN" },
+  { id: "l2",  raw: "Mũi khoan bê tông Bosch 8mm",          qty: 5,  unit: "cái", status: "matched", match: CATALOG[1], selected: true, selectedSupplier: "Bosch VN" },
+  { id: "l3",  raw: "Mũi khoan sắt Makita 10mm",            qty: 12, unit: "cái", status: "matched", match: CATALOG[2], selected: true, selectedSupplier: "Makita VN" },
+  { id: "l4",  raw: "Đá cắt sắt Hải Dương 350mm",           qty: 20, unit: "cái", status: "matched", match: CATALOG[3], selected: true, selectedSupplier: "Hải Dương" },
+  { id: "l5",  raw: "Đá mài Bosch 100mm",                   qty: 22, unit: "cái", status: "matched", match: CATALOG[4], selected: true, selectedSupplier: "Bosch VN" },
 ];
 
-/** Tạo thêm 27 dòng "matched" nữa để có tổng ~36 dòng.
- * Dùng seed deterministic (không Math.random) để SSR + CSR ra cùng giá trị,
- * tránh hydration mismatch nếu sau này render server-side.
- *
- * Vài line cố tình có qty rất cao (>200) → demo case "có hàng nhưng không đủ"
- * → cell qty hiện icon vàng + tooltip "X/qty", row có nền vàng nhạt. */
 function expand(): RequestLine[] {
-  const more: RequestLine[] = [];
-  const matched = SAMPLE_LINES.filter((l) => l.status === "matched");
-  // Cố tình mark vài index là "partial" để demo
-  const partialIndices = new Set([3, 9, 16, 22]);
-  for (let i = 0; i < 27; i++) {
-    const ref = matched[i % matched.length];
-    const baseQty = 1 + ((i * 7 + 3) % 30);
-    // Partial line: qty cao gấp ~2-3 lần tổng stock của ref → guaranteed thiếu
-    const partialQty = ref.match
-      ? Math.floor(ref.match.suppliers.reduce((s, x) => s + x.stock, 0) * (1.5 + (i % 3) * 0.5))
-      : baseQty * 10;
-    more.push({
-      ...ref,
-      id: `g${i + 1}`,
-      qty: partialIndices.has(i) ? partialQty : baseQty,
-      raw: `${ref.raw} (lô ${i + 1})`,
-    });
-  }
-  return more;
+  // No expansion needed - SAMPLE_LINES already has 5 items
+  return [];
 }
 
 export const FULL_SAMPLE: RequestLine[] = [...SAMPLE_LINES, ...expand()];

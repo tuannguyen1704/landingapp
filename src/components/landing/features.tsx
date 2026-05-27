@@ -175,11 +175,6 @@ export default function Features() {
       id="features"
       className="pt-24 pb-[61px] bg-white relative overflow-visible scroll-mt-20 flex flex-col justify-center"
     >
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-1/2 left-[-10%] w-[450px] h-[450px] bg-indigo-100/10 rounded-full blur-[130px]" />
-        <div className="absolute bottom-[5%] right-[-10%] w-[450px] h-[450px] bg-indigo-50/30 rounded-full blur-[135px]" />
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10 w-full">
 
         <div className="text-center max-w-4xl mx-auto mb-16 md:mb-20">

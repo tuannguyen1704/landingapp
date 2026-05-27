@@ -79,7 +79,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen lg:h-screen flex flex-col items-center justify-center pt-20 pb-10 overflow-hidden bg-[#F8FAFF]">
+    <section className="relative min-h-screen lg:h-screen flex flex-col items-center justify-center pt-1 pb-8 overflow-hidden bg-[#F8FAFF]">
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
         <div
           className="absolute inset-y-0 -top-[10%] w-full h-[120%] transition-all duration-75 gsap-parallax"
@@ -98,20 +98,17 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-[#F8FAFF]/50 via-transparent to-[#F8FAFF]/50 pointer-events-none" />
       <div className="absolute inset-0 bg-white/32 backdrop-blur-[1.5px] pointer-events-none" />
 
-      <div className="absolute top-[-50px] left-[-50px] w-[400px] h-[400px] bg-indigo-100/35 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[-50px] right-[-50px] w-[500px] h-[500px] bg-violet-100/35 rounded-full blur-[120px] pointer-events-none" />
-
       <div className="relative w-full max-w-5xl px-6 flex flex-col items-center text-center">
         <h1
           ref={titleRef}
-          className="text-3xl md:text-[38px] lg:text-[44px] font-black tracking-tight text-[#0F172A] mb-1.5 leading-tight select-none"
+          className="text-3xl md:text-[38px] lg:text-[44px] font-black tracking-tight text-[#0F172A] mb-5 leading-tight select-none"
         >
           Tạo yêu cầu <span className="text-indigo-600 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-indigo-600 to-violet-600">báo giá</span> mới
         </h1>
 
         <p
           ref={subtitleRef}
-          className="text-slate-500 text-xs md:text-sm mb-5 max-w-2xl px-2"
+          className="text-slate-500 text-xs md:text-sm mb-10 max-w-2xl px-2 -mt-1"
         >
           Gửi danh sách các vật phẩm cần báo giá, hệ thống tự bóc tách và kết nối các nhà cung cấp.
         </p>

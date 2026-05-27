@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { RequestProvider } from "@/components/request-provider";
+import { AuthProvider } from "@/components/auth-provider";
+import { AuthModalNew } from "@/components/auth-modal-new";
 
 export const metadata: Metadata = {
   title: {
@@ -37,8 +39,11 @@ export default function RootLayout({
     <html lang="vi" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased bg-white">
         <RequestProvider>
-          {children}
-          <Toaster richColors position="top-right" />
+          <AuthProvider>
+            {children}
+            <AuthModalNew />
+            <Toaster richColors position="top-right" />
+          </AuthProvider>
         </RequestProvider>
       </body>
     </html>

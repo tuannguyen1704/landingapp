@@ -1,6 +1,6 @@
 'use client';
 import { AuthProvider } from '@/components/auth-provider';
-import { AuthModal } from '@/components/auth-modal';
+import { AuthModalNew } from '@/components/auth-modal-new';
 import { SiteHeader } from '@/components/site-header';
 import { SidebarNav } from '@/components/sidebar-nav';
 
@@ -16,7 +16,7 @@ export default function AppLayout({
       <main className="flex-1 md:pl-14">
         {children}
       </main>
-      <AuthModal />
+      <AuthModalNew />
     </AuthProvider>
   );
 }
