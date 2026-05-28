@@ -32,12 +32,26 @@ const ITEMS: Item[] = [
 ];
 
 function isItemActive(item: Item, pathname: string): boolean {
-  if (item.path === "/") return pathname === "/" || pathname === "/processing";
-  return pathname.startsWith(item.path);
+  // Exact match hoặc match chính xác với sub-path
+  if (pathname === item.path) return true;
+  // Nếu pathname là sub-path của item.path (VD: /app/catalog thuộc về /app/catalog)
+  // Nhưng không match nhầm parent path (VD: /app không thuộc /app/catalog)
+  if (pathname.startsWith(item.path + "/")) return true;
+  return false;
 }
 
 export function SidebarNav() {
   const pathname = usePathname();
+
+  const handleItemClick = (e: React.MouseEvent, item: Item) => {
+    // Handle "soon" items
+    if (item.soon) {
+      e.preventDefault();
+      toast.message(`${item.label} — sắp ra mắt`, {
+        description: "Tính năng đang trong giai đoạn phát triển.",
+      });
+    }
+  };
 
   return (
     <aside
@@ -53,14 +67,7 @@ export function SidebarNav() {
             href={item.path}
             aria-label={item.label}
             aria-current={active ? "page" : undefined}
-            onClick={(e) => {
-              if (item.soon) {
-                e.preventDefault();
-                toast.message(`${item.label} — sắp ra mắt`, {
-                  description: "Tính năng đang trong giai đoạn phát triển.",
-                });
-              }
-            }}
+            onClick={(e) => handleItemClick(e, item)}
             className={cn(
               "group relative grid h-10 w-10 place-items-center rounded-lg transition-all",
               active

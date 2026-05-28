@@ -1,12 +1,15 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Receipt, Search, Truck, CheckCircle2, Package, Clock, ChevronRight, FileText } from "lucide-react";
 import { useRequest, type SavedOrder } from "@/components/request-provider";
+import { useAuth } from "@/components/auth-provider";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { LoginPromptBanner } from "@/components/ui/login-prompt-banner";
 import { cn, formatVND } from "@/lib/utils";
 
 const STATUS_META: Record<SavedOrder["status"], { label: string; icon: typeof Truck; color: string }> = {
@@ -18,10 +21,10 @@ const STATUS_META: Record<SavedOrder["status"], { label: string; icon: typeof Tr
 };
 
 export default function OrdersPage() {
+  const { user } = useAuth();
   const { orders } = useRequest();
   const [q, setQ] = React.useState("");
   const [tab, setTab] = React.useState<"all" | SavedOrder["status"]>("all");
-  // Tránh flicker: chỉ render danh sách sau khi context đã hydrate localStorage
   const [hydrated, setHydrated] = React.useState(false);
   React.useEffect(() => setHydrated(true), []);
 
@@ -39,6 +42,43 @@ export default function OrdersPage() {
     shipped: orders.filter((o) => o.status === "shipped").length,
     delivered: orders.filter((o) => o.status === "delivered").length,
   };
+
+  // Show loading state while hydrating
+  if (!hydrated) {
+    return (
+      <div className="px-3 sm:px-4 md:px-8 py-4 sm:py-6 max-w-[1400px] mx-auto">
+        <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-[26px] font-bold tracking-tight">Lịch sử đơn hàng</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">Đang tải...</p>
+          </div>
+        </div>
+        <Card className="p-12 text-center text-sm text-muted-foreground">Đang tải...</Card>
+      </div>
+    );
+  }
+
+  // Show login prompt if not authenticated
+  if (!user) {
+    return (
+      <div className="px-3 sm:px-4 md:px-8 py-4 sm:py-6 max-w-[1400px] mx-auto">
+        <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl md:text-[26px] font-bold tracking-tight">Lịch sử đơn hàng</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">Theo dõi trạng thái giao hàng</p>
+          </div>
+          <Button asChild className="brand-gradient text-white border-0 hover:opacity-90">
+            <Link href="/app">+ Tạo yêu cầu mới</Link>
+          </Button>
+        </div>
+        <LoginPromptBanner
+          variant="card"
+          purpose="xem lịch sử đơn hàng của bạn"
+          description="Đăng nhập để xem và theo dõi các đơn hàng đã đặt."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="px-3 sm:px-4 md:px-8 py-4 sm:py-6 max-w-[1400px] mx-auto">

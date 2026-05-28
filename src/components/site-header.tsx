@@ -17,7 +17,14 @@ const STEPS = [
 
 function activeIndex(pathname: string): number {
   // Trang /orders không nằm trong flow stepper → trả -1 (không có step active)
-  const idx = STEPS.findIndex((s) => s.paths.some((p) => p === "/" ? pathname === p || pathname === "/processing" : pathname.startsWith(p)));
+  const idx = STEPS.findIndex((s) =>
+    s.paths.some((p) => {
+      if (p === "/") {
+        return pathname === "/" || pathname === "/processing";
+      }
+      return pathname.startsWith(p);
+    })
+  );
   return idx;
 }
 
@@ -140,11 +147,11 @@ export function SiteHeader() {
             <span className="sm:hidden">Mới</span>
           </button>
           <Link
-            href="/orders"
+            href="/app/orders"
             aria-label="Lịch sử đơn hàng"
             className={cn(
               "inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-sm font-medium transition-all",
-              pathname.startsWith("/orders")
+              pathname.startsWith("/app/orders")
                 ? "bg-gradient-to-r from-violet-50 to-blue-50 text-violet-700 border border-violet-200 shadow-sm"
                 : "text-muted-foreground hover:text-foreground hover:bg-muted",
             )}

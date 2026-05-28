@@ -15,20 +15,31 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRequest } from "@/components/request-provider";
+import { useAuth } from "@/components/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { OrderSummary } from "@/components/order-summary";
+import { LoginPromptBanner } from "@/components/ui/login-prompt-banner";
 import { cn } from "@/lib/utils";
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { user, openModal } = useAuth();
   const { hasRequest, loadSample, shipping, setShipping } = useRequest();
+  const [showGuestPrompt, setShowGuestPrompt] = React.useState(false);
 
   React.useEffect(() => {
     if (!hasRequest) loadSample("Upload_Image.png");
   }, [hasRequest, loadSample]);
+
+  // Show guest login prompt if not authenticated and user hasn't dismissed it
+  React.useEffect(() => {
+    if (!user && !showGuestPrompt) {
+      setShowGuestPrompt(true);
+    }
+  }, [user]);
 
   const set = <K extends keyof typeof shipping>(k: K, v: (typeof shipping)[K]) =>
     setShipping({ ...shipping, [k]: v });
@@ -43,6 +54,19 @@ export default function CheckoutPage() {
 
   return (
     <div className="container py-4">
+      {/* Login prompt for guests */}
+      {showGuestPrompt && (
+        <div className="mb-4">
+          <LoginPromptBanner
+            variant="banner"
+            purpose="lưu thông tin giao hàng cho lần sau"
+            title="Tiết kiệm thời gian lần sau"
+            description="Đăng nhập để lưu thông tin giao hàng và xem lịch sử đơn hàng."
+            onDismiss={() => setShowGuestPrompt(false)}
+          />
+        </div>
+      )}
+
       <div className="grid lg:grid-cols-[1fr_360px] gap-4 lg:gap-5">
         <div className="space-y-3 min-w-0 order-2 lg:order-1">
           <Card className="p-4">

@@ -109,6 +109,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Check registered users stored in localStorage
+      // Note: For demo purposes, we store user data. Password verification
+      // would require storing hashed passwords. For now, accept any password
+      // if the email exists in our registered users.
       try {
         const allKeys = Object.keys(localStorage).filter(
           (k) => k.startsWith("mai-user-") && k !== STORAGE_KEY
