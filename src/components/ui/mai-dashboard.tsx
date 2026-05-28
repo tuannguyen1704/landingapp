@@ -1,6 +1,6 @@
 import React from 'react';
 import { LogOut, User, ShieldCheck, RefreshCw } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/components/auth-provider';
 
 interface DashboardProps {

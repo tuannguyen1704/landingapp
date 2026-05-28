@@ -44,7 +44,7 @@ const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string }>
 function StatusBadge({ status }: { status: string }) {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
   return (
-    <span className={cn("inline-flex px-2.5 py-1 rounded-full text-xs font-medium", config.bg, config.text)}>
+    <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ring-current/10", config.bg, config.text)}>
       {config.label}
     </span>
   );
@@ -53,23 +53,22 @@ function StatusBadge({ status }: { status: string }) {
 function StatCard({ label, value, change, icon: Icon, accent, bg }: { label: string; value: string; change: string; icon: React.ElementType; accent: string; bg: string }) {
   return (
     <div
-      className="bg-white rounded-3xl border border-[#ECECF1] p-6 flex flex-col justify-between h-[140px] hover:-translate-y-0.5"
+      className="group flex min-h-[128px] flex-col justify-between rounded-2xl border border-indigo-100/70 bg-white/90 p-5 shadow-[0_16px_45px_rgba(79,70,229,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-[0_20px_55px_rgba(79,70,229,0.10)]"
       style={{
-        boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
         transition: "all 180ms ease",
       }}
     >
       <div className="flex items-center justify-between">
-        <span className="text-[14px] font-medium text-[#6B7280]">{label}</span>
-        <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center`}>
-          <Icon className="w-[18px] h-[18px]" style={{ color: accent }} />
+        <span className="text-sm font-semibold text-slate-500">{label}</span>
+        <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${bg} ring-1 ring-black/5`}>
+          <Icon className="h-[18px] w-[18px]" style={{ color: accent }} />
         </div>
       </div>
       <div>
-        <div className="text-[40px] font-bold text-[#111827] leading-none mb-2" style={{ letterSpacing: "-0.02em" }}>
+        <div className="mb-2 text-3xl font-bold leading-none text-slate-950">
           {value}
         </div>
-        <span className="text-[14px] font-medium text-[#6B7280]">
+        <span className="text-sm font-medium text-slate-500">
           {change}
         </span>
       </div>
@@ -84,21 +83,21 @@ function Breadcrumb({ pathname }: { pathname: string }) {
   ];
 
   return (
-    <div className="h-16 flex items-center px-8 border-b border-[#ECECF1] bg-white/80 backdrop-blur-sm">
-      <nav className="flex items-center gap-2">
+    <div className="px-4 pt-5 sm:px-6 lg:px-8">
+      <nav className="mx-auto flex h-10 max-w-[1280px] items-center gap-2 rounded-full bg-white/65 px-4 text-sm shadow-sm ring-1 ring-indigo-100/70 backdrop-blur">
         {items.map((item, index) => (
           <React.Fragment key={item.href}>
             {index > 0 && (
-              <ChevronRight className="w-3.5 h-3.5 text-[#D1D5DB]" />
+              <ChevronRight className="h-3.5 w-3.5 text-slate-300" />
             )}
             {index === items.length - 1 ? (
-              <span className="text-[14px] font-semibold text-[#111827]">
+              <span className="font-semibold text-slate-900">
                 {item.label}
               </span>
             ) : (
               <Link
                 href={item.href}
-                className="text-[14px] font-medium text-[#9CA3AF] hover:text-[#111827] transition-colors"
+                className="font-medium text-slate-400 transition-colors hover:text-indigo-600"
               >
                 {item.label}
               </Link>
@@ -120,13 +119,13 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#FAFAFB] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full bg-white border border-[#ECECF1] flex items-center justify-center mx-auto mb-4">
-            <User className="h-5 w-5 text-[#9CA3AF]" />
+      <div className="flex min-h-screen items-center justify-center bg-[#F7F8FF] px-4">
+        <div className="rounded-3xl border border-indigo-100/80 bg-white/90 px-8 py-10 text-center shadow-[0_24px_80px_rgba(79,70,229,0.10)]">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 ring-1 ring-indigo-100">
+            <User className="h-6 w-6 text-indigo-500" />
           </div>
-          <h2 className="text-lg font-medium text-[#111827]">Chưa đăng nhập</h2>
-          <p className="mt-2 text-sm text-[#6B7280] max-w-xs">
+          <h2 className="text-lg font-semibold text-slate-950">Chưa đăng nhập</h2>
+          <p className="mt-2 max-w-xs text-sm text-slate-500">
             Vui lòng đăng nhập để xem thông tin tài khoản của bạn.
           </p>
         </div>
@@ -147,39 +146,40 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAFB]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#F7F8FF]">
+      <div className="pointer-events-none absolute left-[260px] top-0 h-72 w-72 rounded-full bg-indigo-200/35 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-28 h-80 w-80 rounded-full bg-sky-200/30 blur-3xl" />
       <div className="flex">
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed lg:sticky lg:top-0 top-0 left-0 z-40 w-[220px] shrink-0",
+            "fixed left-0 top-0 z-40 w-[220px] shrink-0",
             "transform -translate-x-full lg:translate-x-0 transition-transform duration-200",
-            "bg-white border-r border-[#ECECF1]",
+            "bg-white/90 border-r border-indigo-100/80 backdrop-blur-xl shadow-[12px_0_40px_rgba(79,70,229,0.04)]",
             "h-screen flex flex-col",
             mobileNavOpen && "translate-x-0"
           )}
         >
           {/* Logo Section */}
-          <div className="h-16 flex items-center px-6 border-b border-[#ECECF1]">
+          <div className="flex h-16 items-center px-5">
             <Link href="/app" className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-[14px] flex items-center justify-center"
+                className="brand-gradient flex h-10 w-10 items-center justify-center rounded-2xl shadow-lg shadow-indigo-200/70"
                 style={{
-                  background: "linear-gradient(135deg, #7C6CFF 0%, #5B52F5 100%)",
                   boxShadow: "0 8px 20px rgba(99,91,255,0.12)",
                 }}
               >
-                <span className="text-white font-bold text-sm">M</span>
+                <span className="text-sm font-bold text-white">V</span>
               </div>
               <div>
-                <p className="text-base font-bold text-[#111827] leading-tight">M.AI</p>
-                <p className="text-xs text-[#9CA3AF]">MECSU</p>
+                <p className="text-base font-bold leading-tight text-[#4F46E5]">MAI</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Procurement</p>
               </div>
             </Link>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 py-4 px-3">
+          <nav className="flex-1 px-3 py-4">
             <div className="space-y-1">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
@@ -191,15 +191,15 @@ export default function ProfilePage() {
                     className={cn(
                       "relative flex items-center gap-3 h-11 px-[14px] rounded-[14px] transition-all duration-200",
                       isActive
-                        ? "bg-[#F3F1FF] text-[#635BFF]"
-                        : "text-[#6B7280] hover:bg-[#F5F5F8] hover:text-[#111827]"
+                        ? "bg-indigo-50 text-[#4F46E5] shadow-sm ring-1 ring-indigo-100"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-950"
                     )}
                     style={{ transition: "all 180ms ease" }}
                   >
                     <Icon className="w-[18px] h-[18px]" />
                     <span className="text-[14px] font-medium">{item.label}</span>
                     {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-6 bg-[#635BFF] rounded-r" />
+                      <span className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r bg-[#4F46E5]" />
                     )}
                   </Link>
                 );
@@ -208,18 +208,18 @@ export default function ProfilePage() {
           </nav>
 
           {/* Bottom Section */}
-          <div className="py-4 px-3 border-t border-[#ECECF1]">
+          <div className="border-t border-indigo-100/80 px-3 py-4">
             <div className="space-y-1">
               <Link
                 href="/app/profile/settings"
-                className="flex items-center gap-3 h-11 px-[14px] rounded-[14px] text-[#6B7280] hover:bg-[#F5F5F8] hover:text-[#111827] transition-all duration-200"
+                className="flex h-11 items-center gap-3 rounded-[14px] px-[14px] text-slate-500 transition-all duration-200 hover:bg-slate-50 hover:text-slate-950"
               >
                 <Settings className="w-[18px] h-[18px]" />
                 <span className="text-[14px] font-medium">Cài đặt</span>
               </Link>
               <button
                 onClick={logout}
-                className="w-full flex items-center gap-3 h-11 px-[14px] rounded-[14px] text-[#EF4444] hover:bg-red-50 transition-all duration-200"
+                className="flex h-11 w-full items-center gap-3 rounded-[14px] px-[14px] text-[#EF4444] transition-all duration-200 hover:bg-red-50"
               >
                 <LogOut className="w-[18px] h-[18px]" />
                 <span className="text-[14px] font-medium">Đăng xuất</span>
@@ -237,18 +237,18 @@ export default function ProfilePage() {
         )}
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0 lg:ml-0">
+        <main className="relative z-10 min-w-0 flex-1 pt-[76px] lg:ml-[220px] lg:pt-0">
           {/* Mobile Header */}
-          <div className="lg:hidden fixed top-14 left-0 right-0 z-30 bg-white border-b border-[#ECECF1] px-4 py-3">
+          <div className="fixed left-0 right-0 top-0 z-30 border-b border-indigo-100/80 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
             <button
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
-              className="flex items-center gap-3 w-full"
+              className="flex w-full items-center gap-3 rounded-2xl bg-indigo-50/70 px-3 py-2 ring-1 ring-indigo-100"
             >
-              <div className="w-9 h-9 rounded-xl bg-[#F3F1FF] flex items-center justify-center">
-                <User className="h-4 w-4 text-[#635BFF]" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#4F46E5] shadow-sm">
+                <User className="h-4 w-4" />
               </div>
-              <span className="text-sm font-medium text-[#111827]">Tài khoản</span>
-              <ChevronRight className={cn("h-4 w-4 text-[#9CA3AF] ml-auto transition-transform", mobileNavOpen && "rotate-90")} />
+              <span className="text-sm font-semibold text-slate-950">Tài khoản</span>
+              <ChevronRight className={cn("ml-auto h-4 w-4 text-slate-400 transition-transform", mobileNavOpen && "rotate-90")} />
             </button>
           </div>
 
@@ -256,27 +256,32 @@ export default function ProfilePage() {
           <Breadcrumb pathname={pathname} />
 
           {/* Content */}
-          <div className="px-8 pt-8 pb-10">
+          <div className="mx-auto max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 lg:px-8 lg:pt-8">
 
             {/* Profile Header */}
-            <div className="bg-white rounded-3xl border border-[#ECECF1] p-8 mb-8" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-              <div className="flex items-center gap-6">
+            <div className="relative mb-8 overflow-hidden rounded-3xl border border-indigo-100/80 bg-white/90 p-6 shadow-[0_24px_80px_rgba(79,70,229,0.10)] backdrop-blur sm:p-8">
+              <div className="absolute right-0 top-0 h-40 w-56 rounded-bl-full bg-gradient-to-br from-indigo-100 via-violet-100 to-sky-100 opacity-80" />
+              <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
                 <div className="relative">
-                  <UserAvatar name={user.name} size="lg" className="!h-16 !w-16 !text-xl" />
-                  <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white" />
+                  <UserAvatar name={user.name} size="lg" className="!h-20 !w-20 !text-2xl ring-4 ring-white shadow-xl" />
+                  <div className="absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full border-[3px] border-white bg-emerald-500" />
                 </div>
-                <div className="flex-1">
-                  <h2 className="text-[28px] font-bold text-[#111827] leading-tight" style={{ letterSpacing: "-0.03em" }}>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-[#4F46E5] ring-1 ring-indigo-100">Tài khoản doanh nghiệp</span>
+                    <span className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">Đã xác thực</span>
+                  </div>
+                  <h2 className="truncate text-3xl font-bold leading-tight text-slate-950">
                     {user.name}
                   </h2>
-                  <p className="text-[15px] text-[#6B7280] mt-1">{user.email}</p>
+                  <p className="mt-1 truncate text-[15px] text-slate-500">{user.email}</p>
                   <div className="flex items-center gap-2 mt-2">
-                    <Building2 className="w-4 h-4 text-[#9CA3AF]" />
-                    <span className="text-sm text-[#9CA3AF]">Công ty TNHH MECSU</span>
+                    <Building2 className="h-4 w-4 text-indigo-400" />
+                    <span className="text-sm font-medium text-slate-500">Công ty TNHH MECSU</span>
                   </div>
                 </div>
                 <button
-                  className="h-[42px] px-[18px] text-[14px] font-semibold text-white bg-[#635BFF] rounded-[14px] hover:bg-[#5B52F5] transition-all duration-200"
+                  className="brand-gradient h-[42px] rounded-2xl px-5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-indigo-300 sm:self-start"
                   style={{ boxShadow: "0 2px 8px rgba(99, 91, 255, 0.25)" }}
                 >
                   Chỉnh sửa
@@ -285,7 +290,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Statistics */}
-            <div className="grid grid-cols-4 gap-5 mt-8 mb-10">
+            <div className="mb-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {stats.map((stat, i) => (
                 <StatCard key={i} {...stat} />
               ))}
@@ -293,56 +298,58 @@ export default function ProfilePage() {
 
             {/* Recent Orders */}
             <section className="mb-10">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-[24px] font-semibold text-[#111827]" style={{ letterSpacing: "-0.02em" }}>
+              <div className="mb-5 flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-950">
                   Đơn hàng gần đây
                 </h2>
                 <Link
                   href="/app/profile/orders"
-                  className="text-[14px] font-medium text-[#635BFF] hover:text-[#5B52F5] transition-colors"
+                  className="text-sm font-semibold text-[#4F46E5] transition-colors hover:text-[#3730A3]"
                 >
                   Xem tất cả
                 </Link>
               </div>
 
               {orders.length === 0 ? (
-                <div className="bg-white rounded-3xl border border-[#ECECF1] py-16 text-center">
-                  <ShoppingCart className="w-10 h-10 text-[#D1D5DB] mx-auto mb-4" />
-                  <p className="text-[15px] text-[#6B7280]">Chưa có đơn hàng nào</p>
+                <div className="rounded-3xl border border-indigo-100/80 bg-white/90 py-16 text-center shadow-[0_16px_45px_rgba(79,70,229,0.06)]">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50">
+                    <ShoppingCart className="h-7 w-7 text-[#4F46E5]" />
+                  </div>
+                  <p className="text-[15px] font-medium text-slate-500">Chưa có đơn hàng nào</p>
                   <Link
                     href="/app"
-                    className="inline-flex mt-4 h-11 px-[18px] text-[14px] font-semibold text-white bg-[#635BFF] rounded-[14px] hover:bg-[#5B52F5] transition-all duration-200"
+                    className="brand-gradient mt-4 inline-flex h-11 items-center rounded-2xl px-5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition-all duration-200 hover:-translate-y-0.5"
                     style={{ boxShadow: "0 2px 8px rgba(99, 91, 255, 0.25)" }}
                   >
                     Tạo yêu cầu báo giá
                   </Link>
                 </div>
               ) : (
-                <div className="bg-white rounded-3xl border border-[#ECECF1] overflow-hidden" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-                  <table className="w-full">
+                <div className="overflow-x-auto rounded-3xl border border-indigo-100/80 bg-white/90 shadow-[0_16px_45px_rgba(79,70,229,0.06)]">
+                  <table className="w-full min-w-[720px]">
                     <thead>
-                      <tr className="bg-[#FAFAFB]">
-                        <th className="px-6 py-4 text-left text-[13px] font-semibold text-[#9CA3AF] uppercase tracking-[0.04em]">Mã đơn</th>
-                        <th className="px-6 py-4 text-left text-[13px] font-semibold text-[#9CA3AF] uppercase tracking-[0.04em]">Ngày đặt</th>
-                        <th className="px-6 py-4 text-left text-[13px] font-semibold text-[#9CA3AF] uppercase tracking-[0.04em]">Trạng thái</th>
-                        <th className="px-6 py-4 text-left text-[13px] font-semibold text-[#9CA3AF] uppercase tracking-[0.04em]">Tổng tiền</th>
+                      <tr className="bg-indigo-50/55">
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Mã đơn</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Ngày đặt</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Trạng thái</th>
+                        <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-[0.08em] text-slate-400">Tổng tiền</th>
                         <th className="w-20" />
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#ECECF1]">
+                    <tbody className="divide-y divide-indigo-50">
                       {orders.slice(0, 5).map((order) => (
                         <tr
                           key={order.id}
-                          className="hover:bg-[#FAFAFB] transition-colors"
+                          className="transition-colors hover:bg-indigo-50/35"
                           style={{ height: "72px", transition: "background-color 180ms ease" }}
                         >
                           <td className="px-6 py-5">
-                            <span className="text-[15px] font-semibold text-[#111827]">
+                            <span className="text-[15px] font-semibold text-slate-950">
                               #{order.id.replace(/-/g, "").slice(0, 8).toUpperCase()}
                             </span>
                           </td>
                           <td className="px-6 py-5">
-                            <span className="text-[15px] text-[#6B7280]">
+                            <span className="text-[15px] text-slate-500">
                               {new Date(order.createdAt).toLocaleDateString("vi-VN", {
                                 day: "numeric",
                                 month: "short",
@@ -354,7 +361,7 @@ export default function ProfilePage() {
                             <StatusBadge status={order.status} />
                           </td>
                           <td className="px-6 py-5">
-                            <span className="text-[15px] font-semibold text-[#111827]">{formatVND(order.totalAmount)}</span>
+                            <span className="text-[15px] font-semibold text-slate-950">{formatVND(order.totalAmount)}</span>
                           </td>
                           <td className="px-6 py-5">
                             <div className="flex items-center gap-1">
@@ -376,40 +383,42 @@ export default function ProfilePage() {
 
             {/* Quotations */}
             <section>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-[24px] font-semibold text-[#111827]" style={{ letterSpacing: "-0.02em" }}>
+              <div className="mb-5 flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-slate-950">
                   Yêu cầu báo giá
                 </h2>
                 <Link
                   href="/app/profile/quotes"
-                  className="text-[14px] font-medium text-[#635BFF] hover:text-[#5B52F5] transition-colors"
+                  className="text-sm font-semibold text-[#4F46E5] transition-colors hover:text-[#3730A3]"
                 >
                   Xem tất cả
                 </Link>
               </div>
 
               {orders.length === 0 ? (
-                <div className="bg-white rounded-3xl border border-[#ECECF1] py-16 text-center">
-                  <FileText className="w-10 h-10 text-[#D1D5DB] mx-auto mb-4" />
-                  <p className="text-[15px] text-[#6B7280]">Chưa có yêu cầu báo giá nào</p>
+                <div className="rounded-3xl border border-indigo-100/80 bg-white/90 py-16 text-center shadow-[0_16px_45px_rgba(79,70,229,0.06)]">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50">
+                    <FileText className="h-7 w-7 text-[#4F46E5]" />
+                  </div>
+                  <p className="text-[15px] font-medium text-slate-500">Chưa có yêu cầu báo giá nào</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {orders.slice(0, 4).map((order) => (
                     <div
                       key={order.id}
-                      className="bg-white rounded-2xl border border-[#ECECF1] px-6 py-5 flex items-center justify-between hover:shadow-md transition-all duration-200 cursor-pointer"
+                      className="flex cursor-pointer flex-col gap-4 rounded-2xl border border-indigo-100/80 bg-white/90 px-5 py-4 shadow-[0_12px_35px_rgba(79,70,229,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-white hover:shadow-[0_18px_45px_rgba(79,70,229,0.10)] sm:flex-row sm:items-center sm:justify-between sm:px-6"
                       style={{ transition: "all 180ms ease" }}
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-[#F3F1FF] flex items-center justify-center">
-                          <FileText className="w-5 h-5 text-[#635BFF]" />
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-50 ring-1 ring-indigo-100">
+                          <FileText className="h-5 w-5 text-[#4F46E5]" />
                         </div>
-                        <div>
-                          <p className="text-[15px] font-semibold text-[#111827]">
+                        <div className="min-w-0">
+                          <p className="truncate text-[15px] font-semibold text-slate-950">
                             Yêu cầu #{order.id.slice(0, 8).toUpperCase()}
                           </p>
-                          <p className="text-sm text-[#9CA3AF] mt-0.5">
+                          <p className="mt-0.5 text-sm text-slate-400">
                             {order.itemCount} sản phẩm · {new Date(order.createdAt).toLocaleDateString("vi-VN", {
                               day: "numeric",
                               month: "short",
@@ -418,9 +427,9 @@ export default function ProfilePage() {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center justify-between gap-4 sm:justify-end">
                         <StatusBadge status={order.status} />
-                        <ChevronRight className="w-5 h-5 text-[#9CA3AF]" />
+                        <ChevronRight className="h-5 w-5 text-slate-300" />
                       </div>
                     </div>
                   ))}

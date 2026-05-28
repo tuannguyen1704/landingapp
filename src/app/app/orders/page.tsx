@@ -5,19 +5,16 @@ import { useRouter } from "next/navigation";
 import { Receipt, Search, Truck, CheckCircle2, Package, Clock, ChevronRight, FileText } from "lucide-react";
 import { useRequest, type SavedOrder } from "@/components/request-provider";
 import { useAuth } from "@/components/auth-provider";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { LoginPromptBanner } from "@/components/ui/login-prompt-banner";
 import { cn, formatVND } from "@/lib/utils";
 
 const STATUS_META: Record<SavedOrder["status"], { label: string; icon: typeof Truck; color: string }> = {
-  placed:    { label: "Đã đặt",        icon: Receipt,      color: "bg-amber-100 text-amber-700" },
-  confirmed: { label: "Đã xác nhận",   icon: CheckCircle2, color: "bg-violet-100 text-violet-700" },
-  packed:    { label: "Đang đóng gói", icon: Package,      color: "bg-blue-100 text-blue-700" },
-  shipped:   { label: "Đang giao",     icon: Truck,        color: "bg-sky-100 text-sky-700" },
-  delivered: { label: "Đã giao",       icon: CheckCircle2, color: "bg-emerald-100 text-emerald-700" },
+  placed:    { label: "Đã đặt",        icon: Receipt,      color: "rounded-sm bg-amber-100 text-amber-700" },
+  confirmed: { label: "Đã xác nhận",   icon: CheckCircle2, color: "rounded-sm bg-violet-100 text-violet-700" },
+  packed:    { label: "Đang đóng gói", icon: Package,      color: "rounded-sm bg-blue-100 text-blue-700" },
+  shipped:   { label: "Đang giao",     icon: Truck,        color: "rounded-sm bg-sky-100 text-sky-700" },
+  delivered: { label: "Đã giao",       icon: CheckCircle2, color: "rounded-sm bg-emerald-100 text-emerald-700" },
 };
 
 export default function OrdersPage() {
@@ -46,11 +43,11 @@ export default function OrdersPage() {
   // Show loading state while hydrating
   if (!hydrated) {
     return (
-      <div className="px-3 sm:px-4 md:px-8 py-4 sm:py-6 max-w-[1400px] mx-auto">
-        <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
+      <div className="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 md:px-8">
+        <div className="mb-7 flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-[26px] font-bold tracking-tight">Lịch sử đơn hàng</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground">Đang tải...</p>
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-950">Lịch sử đơn hàng</h1>
+            <p className="text-base text-slate-600">Đang tải...</p>
           </div>
         </div>
         <Card className="p-12 text-center text-sm text-muted-foreground">Đang tải...</Card>
@@ -61,15 +58,18 @@ export default function OrdersPage() {
   // Show login prompt if not authenticated
   if (!user) {
     return (
-      <div className="px-3 sm:px-4 md:px-8 py-4 sm:py-6 max-w-[1400px] mx-auto">
-        <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
+      <div className="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 md:px-8">
+        <div className="mb-7 flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-[26px] font-bold tracking-tight">Lịch sử đơn hàng</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground">Theo dõi trạng thái giao hàng</p>
+            <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-950">Lịch sử đơn hàng</h1>
+            <p className="text-base text-slate-600">Theo dõi trạng thái giao hàng</p>
           </div>
-          <Button asChild className="brand-gradient text-white border-0 hover:opacity-90">
-            <Link href="/app">+ Tạo yêu cầu mới</Link>
-          </Button>
+          <Link
+            href="/app"
+            className="inline-flex h-12 items-center border-0 rounded-sm bg-gradient-to-r from-violet-600 to-blue-600 px-6 text-base font-semibold text-white outline-none transition-opacity hover:opacity-95"
+          >
+            + Tạo yêu cầu mới
+          </Link>
         </div>
         <LoginPromptBanner
           variant="card"
@@ -81,24 +81,32 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="px-3 sm:px-4 md:px-8 py-4 sm:py-6 max-w-[1400px] mx-auto">
-      <div className="flex items-start justify-between gap-3 mb-5 flex-wrap">
+    <div className="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 md:px-8">
+      <div className="mb-7 flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-xl sm:text-2xl md:text-[26px] font-bold tracking-tight">Lịch sử đơn hàng</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground">{orders.length} đơn đã đặt · theo dõi trạng thái giao hàng</p>
+          <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-950">Lịch sử đơn hàng</h1>
+          <p className="text-base text-slate-600">{orders.length} đơn đã đặt · theo dõi trạng thái giao hàng</p>
         </div>
-        <Button asChild className="brand-gradient text-white border-0 hover:opacity-90">
-          <Link href="/app">+ Tạo yêu cầu mới</Link>
-        </Button>
+        <Link
+          href="/app"
+          className="inline-flex h-12 items-center border-0 rounded-sm bg-gradient-to-r from-violet-600 to-blue-600 px-6 text-base font-semibold text-white outline-none transition-opacity hover:opacity-95"
+        >
+          + Tạo yêu cầu mới
+        </Link>
       </div>
 
       {/* Search + tabs */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 mb-4">
-        <div className="relative w-full sm:flex-1 sm:min-w-[200px] sm:max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tìm theo mã đơn..." className="pl-9 h-9" />
+      <div className="mb-5 flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+        <div className="relative w-full lg:max-w-[460px]">
+          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-600" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Tìm theo mã đơn..."
+            className="h-[60px] w-full rounded-sm border border-slate-300 bg-white pl-14 pr-4 text-base outline-none placeholder:text-slate-500 focus:border-slate-400"
+          />
         </div>
-        <div className="flex items-center gap-1 text-xs overflow-x-auto scrollbar-none pb-0.5 flex-nowrap">
+        <div className="flex items-center gap-5 overflow-x-auto pb-0.5 text-sm scrollbar-none">
           {[
             { k: "all", label: "Tất cả" },
             { k: "placed", label: "Đã đặt" },
@@ -114,12 +122,12 @@ export default function OrdersPage() {
                 key={t.k}
                 onClick={() => setTab(t.k as typeof tab)}
                 className={cn(
-                  "inline-flex items-center gap-1 px-2.5 h-8 rounded-md border font-medium transition-all",
-                  active ? "ring-2 ring-violet-300 bg-violet-50 text-violet-700 border-violet-200" : "border-transparent text-muted-foreground hover:bg-muted",
+                  "inline-flex h-[60px] shrink-0 appearance-none items-center gap-2 border-0 bg-transparent px-3 font-semibold outline-none ring-0 transition-colors",
+                  active ? "bg-violet-50 text-violet-700 shadow-[inset_0_-3px_0_rgba(124,58,237,0.35)]" : "text-slate-950 hover:text-violet-700",
                 )}
               >
                 {t.label}
-                <span className={cn("text-[10px] tabular-nums px-1.5 rounded", active ? "bg-white/60" : "bg-muted")}>
+                <span className={cn("rounded px-1.5 text-xs tabular-nums", active ? "bg-white/70 text-violet-700" : "text-slate-950")}>
                   {c}
                 </span>
               </button>
@@ -140,7 +148,7 @@ export default function OrdersPage() {
           </p>
         </Card>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {visible.map((o) => {
             const meta = STATUS_META[o.status];
             const Icon = meta.icon;
@@ -148,31 +156,31 @@ export default function OrdersPage() {
               <Link
                 key={o.id}
                 href={`/orders/${o.id}`}
-                className="block rounded-xl border bg-card p-4 hover:shadow-md hover:border-violet-300 transition-all group"
+                className="group block rounded-2xl border border-slate-200 p-5 transition-all hover:border-violet-500 hover:shadow-[0_10px_30px_rgba(79,70,229,0.10)]"
               >
-                <div className="flex items-center gap-3">
-                  <div className={cn("grid h-10 w-10 sm:h-12 sm:w-12 place-items-center rounded-lg shrink-0", meta.color)}>
-                    <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                <div className="flex items-center gap-4">
+                  <div className={cn("grid h-[60px] w-[60px] shrink-0 place-items-center rounded-none", meta.color)}>
+                    <Icon className="h-6 w-6" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono font-bold brand-gradient-text">#{o.id}</span>
-                      <Badge variant="secondary" className={meta.color}>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="font-mono text-base font-semibold text-[#4F46E5]">#{o.id}</span>
+                      <span className={cn("inline-flex items-center px-2.5 py-1 text-sm font-medium", meta.color)}>
                         {meta.label}
-                      </Badge>
+                      </span>
                     </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground mt-0.5 flex items-center gap-1.5 sm:gap-3 flex-wrap">
+                    <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-slate-950">
                       <span className="inline-flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
+                        <Clock className="h-3.5 w-3.5" />
                         {new Date(o.createdAt).toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" })}
                       </span>
-                      <span className="hidden sm:inline">·</span>
-                      <span className="hidden sm:inline">{o.itemCount} mặt hàng</span>
+                      <span>·</span>
+                      <span>{o.itemCount} mặt hàng</span>
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-base sm:text-lg font-bold brand-gradient-text tabular-nums">{formatVND(o.totalAmount)}</div>
-                    <div className="text-[10px] sm:text-[11px] text-muted-foreground">
+                    <div className="text-xl font-bold tabular-nums text-[#3F3BEF]">{formatVND(o.totalAmount)}</div>
+                    <div className="mt-1 text-xs text-slate-950">
                       {o.paymentMethod === "qr"
                         ? "Chuyển khoản QR"
                         : o.paymentMethod === "credit"
@@ -182,7 +190,7 @@ export default function OrdersPage() {
                             : "BNPL"}
                     </div>
                   </div>
-                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground group-hover:text-violet-600 transition-colors shrink-0" />
+                  <ChevronRight className="h-6 w-6 shrink-0 text-slate-950 transition-colors group-hover:text-violet-600" />
                 </div>
               </Link>
             );
@@ -191,7 +199,7 @@ export default function OrdersPage() {
       )}
 
       {orders.length > 0 && (
-        <div className="mt-6 text-center text-xs text-muted-foreground">
+        <div className="mt-8 text-center text-sm text-slate-950">
           Lịch sử lưu trên trình duyệt này. Production sẽ đồng bộ với BE để xem trên mọi thiết bị.
         </div>
       )}

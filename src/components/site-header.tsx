@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, CheckCircle2, FileText, CreditCard, Receipt, Check, Plus, User, LogOut, Settings, ChevronRight } from "lucide-react";
+import { Search, CheckCircle2, FileText, CreditCard, Receipt, Plus, User, LogOut, Settings, ChevronRight } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { UserAvatar } from "@/components/user-avatar";
@@ -62,17 +62,18 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
+    <header className="sticky top-0 z-40 bg-background/90 backdrop-blur">
       <div className="flex h-14 sm:h-16 items-center gap-3 sm:gap-6 px-3 sm:px-4 md:px-8 max-w-[1600px] mx-auto">
-        <Link href="/app" className="flex items-center gap-2 shrink-0">
+        <Link href="/app" className="flex items-center gap-2.5 shrink-0">
           <span
-            aria-hidden
-            className="grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-md brand-gradient text-white font-black text-sm sm:text-base shadow"
+            aria-hidden="true"
+            className="grid h-8 w-8 place-items-center rounded-[4px] brand-gradient text-white font-black text-base shadow-md"
           >
             V
           </span>
-          <span className="text-lg sm:text-xl font-black tracking-tight brand-gradient-text">MAI</span>
-          <span className="hidden md:inline text-xs font-bold tracking-wider text-muted-foreground border-l pl-2 uppercase">
+          <span className="text-xl font-black leading-none tracking-normal text-[#4F46E5]">MAI</span>
+          <span aria-hidden="true" className="hidden md:block h-4 w-px bg-slate-300" />
+          <span className="hidden md:inline text-xs font-bold tracking-wider text-slate-500 uppercase">
             Procurement
           </span>
         </Link>
@@ -80,61 +81,27 @@ export function SiteHeader() {
         {/* Stepper — visual only, không clickable */}
         <ol
           aria-label="Quy trình 4 bước"
-          className="flex-1 flex items-center justify-center gap-0.5 sm:gap-1 overflow-x-auto scrollbar-thin -mx-1 px-1"
+          className="flex-1 flex items-center justify-center gap-3 sm:gap-5 overflow-x-auto scrollbar-thin -mx-1 px-1"
         >
           {STEPS.map((s, i) => {
             const Icon = s.icon;
-            const isDone = activeIdx > -1 && i < activeIdx;
             const isCurrent = i === activeIdx;
-            const isPending = activeIdx === -1 || i > activeIdx;
             return (
-              <li key={s.key} className="flex items-center gap-0.5 sm:gap-1 shrink-0">
-                {/* Step pill */}
+              <li key={s.key} className="flex items-center gap-3 sm:gap-5 shrink-0">
                 <div
                   aria-current={isCurrent ? "step" : undefined}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-sm font-medium transition-all select-none",
-                    isCurrent && "bg-gradient-to-r from-violet-50 to-blue-50 text-violet-700 border border-violet-200 shadow-sm",
-                    isDone && "text-emerald-700",
-                    isPending && "text-muted-foreground/70",
-                  )}
+                  className="inline-flex items-center gap-2 text-sm sm:text-[15px] font-semibold text-slate-400 select-none"
                 >
-                  {/* Icon hoặc check */}
-                  <span
-                    className={cn(
-                      "relative grid h-5 w-5 place-items-center rounded-full shrink-0 transition-colors",
-                      isCurrent && "brand-gradient text-white shadow",
-                      isDone && "bg-emerald-500 text-white",
-                      isPending && "bg-muted text-muted-foreground border border-border",
-                    )}
-                  >
-                    {isDone ? <Check className="h-3 w-3" strokeWidth={3} /> : <Icon className="h-3 w-3" />}
-                    {isCurrent && (
-                      <span className="absolute inset-0 rounded-full ring-2 ring-violet-300/60 animate-[border-glow_2.5s_ease-in-out_infinite]" />
-                    )}
+                  <span className="grid h-5 w-5 sm:h-6 sm:w-6 place-items-center rounded-full border border-slate-200 bg-slate-50 text-slate-500 shrink-0">
+                    <Icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" strokeWidth={2} />
                   </span>
-                  <span
-                    className={cn(
-                      "whitespace-nowrap",
-                      isCurrent ? "inline font-semibold" : "hidden sm:inline",
-                    )}
-                  >
-                    {s.label}
-                  </span>
+                  <span className="whitespace-nowrap">{s.label}</span>
                 </div>
 
-                {/* Connector */}
                 {i < STEPS.length - 1 && (
                   <span
                     aria-hidden
-                    className={cn(
-                      "block h-0.5 w-3 sm:w-5 md:w-8 rounded-full shrink-0 transition-colors",
-                      i < activeIdx
-                        ? "bg-emerald-400"
-                        : i === activeIdx
-                          ? "bg-gradient-to-r from-violet-400 to-border"
-                          : "bg-border",
-                    )}
+                    className="block h-px w-8 sm:w-10 bg-slate-200 shrink-0"
                   />
                 )}
               </li>
@@ -147,9 +114,9 @@ export function SiteHeader() {
           <button
             onClick={handleNewRequest}
             title="Tạo yêu cầu báo giá mới"
-            className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+            className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-sm sm:text-[15px] font-semibold text-slate-400 hover:text-slate-600 hover:bg-muted transition-all"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="hidden sm:inline">Thêm yêu cầu mới</span>
             <span className="sm:hidden">Mới</span>
           </button>
@@ -157,13 +124,13 @@ export function SiteHeader() {
             href="/app/orders"
             aria-label="Lịch sử đơn hàng"
             className={cn(
-              "inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-sm font-medium transition-all",
+              "inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-sm sm:text-[15px] font-semibold transition-all",
               pathname.startsWith("/app/orders")
                 ? "bg-gradient-to-r from-violet-50 to-blue-50 text-violet-700 border border-violet-200 shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                : "text-slate-400 hover:text-slate-600 hover:bg-muted",
             )}
           >
-            <Receipt className="h-4 w-4" />
+            <Receipt className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span className="hidden sm:inline">Lịch sử</span>
           </Link>
 
