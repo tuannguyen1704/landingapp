@@ -20,6 +20,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
 
+  // Password validation on blur - minimum 3 characters
+  const handlePasswordBlur = () => {
+    if (password && password.length < 3) {
+      setErrors((prev) => ({ ...prev, password: 'Mật khẩu phải ít nhất 3 ký tự' }));
+    } else {
+      setErrors((prev) => ({ ...prev, password: undefined }));
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { username?: string; password?: string } = {};
@@ -29,8 +38,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     }
     if (!password) {
       newErrors.password = 'Vui lòng nhập mật khẩu';
-    } else if (password.length < 4) {
-      newErrors.password = 'Mật khẩu phải từ 4 ký tự';
+    } else if (password.length < 3) {
+      newErrors.password = 'Mật khẩu phải ít nhất 3 ký tự';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -117,6 +126,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           setPassword(e.target.value);
           if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
         }}
+        onBlur={handlePasswordBlur}
         error={errors.password}
       />
 

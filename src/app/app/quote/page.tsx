@@ -254,7 +254,7 @@ export default function QuotePage() {
     setRescanningIds(new Set(entries.map(([id]) => id)));
     setPendingReplace(new Map());
     toast.message(`Mai đang ép giá lại ${entries.length} mã song song...`, {
-      description: "Quét 36 NCC cho từng mã mới (~10s).",
+      description: "Quét 10 NCC cho từng mã mới (~5s).",
     });
     setTimeout(() => {
       setOutOfStock((prev) => {
@@ -792,7 +792,7 @@ export default function QuotePage() {
                             <Loader2 className="h-4 w-4 text-violet-600 animate-spin shrink-0" />
                             <div className="min-w-0 flex-1">
                               <div className="text-xs font-semibold text-violet-700">Đang ép giá lại...</div>
-                              <div className="text-[10px] text-violet-600">Quét 36 NCC cho mã mới</div>
+                              <div className="text-[10px] text-violet-600">Quét 10 NCC cho mã mới</div>
                             </div>
                           </div>
                         ) : isOOS && pendingItem ? (
@@ -1425,21 +1425,20 @@ function generatePhase1Events(matched: ReturnType<typeof useRequest>["lines"]): 
   const ncc = [
     "MRO Smart V2", "Bosch VN", "Stanley VN", "Makita VN", "Hải Dương Tools",
     "Kho SG 01", "Đông Á Tools", "Asaki VN", "Đại lý SKF", "Total VN",
-    "Kho Hà Nội 01", "Đại lý Mitsubishi", "Karcher VN", "MRO Bình Dương", "Kho Cần Thơ",
   ];
   const seq: FeedEvent[] = [];
   seq.push({ delay: 0, kind: "info", text: "Khởi động engine ép giá realtime", sub: "Phiên #123" });
-  seq.push({ delay: 500, kind: "info", text: "Quét 36 NCC trong mạng lưới MRO", sub: "Ưu tiên NCC kết nối API" });
+  seq.push({ delay: 500, kind: "info", text: "Quét 10 NCC trong mạng lưới MRO", sub: "Ưu tiên NCC kết nối API" });
   seq.push({ delay: 900, kind: "info", text: "Đang matching mã sản phẩm với catalog", sub: "AI semantic search" });
 
   let t = 1400;
   let nccCount = 0;
   let skuIdx = 0;
-  const PHASE1_DURATION = 28500; // dành 28.5s cho 15 NCC, còn 1.5s cho mở/đóng
+  const PHASE1_DURATION = 12000; // dành 12s cho 5 NCC
   const slot = (PHASE1_DURATION - 1400) / ncc.length;
 
   ncc.forEach((n, i) => {
-    if (i >= 15) return;
+    if (i >= 5) return;
     seq.push({ delay: t, kind: "ncc-call", text: `Kết nối API ${n}...`, sub: "Gửi request tồn kho" });
     t += slot * 0.25 + rand(50, 150);
     seq.push({ delay: t, kind: "ncc-done", text: `${n}: kết nối OK`, sub: `Latency ${Math.round(rand(40, 280))}ms` });
@@ -1462,12 +1461,12 @@ function generatePhase1Events(matched: ReturnType<typeof useRequest>["lines"]): 
     }
 
     nccCount++;
-    if (nccCount % 3 === 0 || nccCount === 15) {
+    if (nccCount % 3 === 0 || nccCount === 5) {
       seq.push({
         delay: t,
         kind: "info",
-        text: `${nccCount}/36 NCC đã báo giá`,
-        sub: nccCount === 15 ? "Hoàn tất giai đoạn 1" : "Đang tiếp tục quét...",
+        text: `${nccCount}/10 NCC đã báo giá`,
+        sub: nccCount === 5 ? "Hoàn tất giai đoạn 1" : "Đang tiếp tục quét...",
       });
       t += slot * 0.2;
     }
@@ -1475,8 +1474,8 @@ function generatePhase1Events(matched: ReturnType<typeof useRequest>["lines"]): 
   });
 
   // 2 events cuối: chuẩn bị hoàn tất + tổng kết
-  seq.push({ delay: 28200, kind: "info", text: "Chuẩn bị hoàn tất giai đoạn 1...", sub: "Đang tổng hợp báo giá" });
-  seq.push({ delay: 29400, kind: "ncc-done", text: "✓ Hoàn tất giai đoạn 1", sub: "15/36 NCC đã báo giá thành công" });
+  seq.push({ delay: 11000, kind: "info", text: "Chuẩn bị hoàn tất giai đoạn 1...", sub: "Đang tổng hợp báo giá" });
+  seq.push({ delay: 12000, kind: "ncc-done", text: "✓ Hoàn tất giai đoạn 1", sub: "5/10 NCC đã báo giá thành công" });
 
   return seq;
 }
@@ -1485,22 +1484,19 @@ function generatePhase2Events(matched: ReturnType<typeof useRequest>["lines"]): 
   const mobileNcc = [
     "Vinasteel Mobile", "An Phú Tools", "Đại lý Total HCM", "Kho HN 02", "Đại lý Bosch Đà Nẵng",
     "MRO Đà Nẵng", "Phú Yên Hardware", "TP Mining Tools", "Kho Long An", "Đại lý NSK",
-    "Cường Phát MRO", "Tân Bình Tools", "MRO Vũng Tàu", "Đại lý FAG", "Kho Hải Phòng",
-    "Bình Tân Industries", "Đại lý Kobe", "Cát Lái Hardware", "Đại lý Karcher 2", "Đức Tâm Industries",
-    "Vinasteel JSC",
   ];
   const seq: FeedEvent[] = [];
-  seq.push({ delay: 0, kind: "info", text: "Push notification 21 NCC mobile", sub: "Đang chờ phản hồi qua app NCC..." });
+  seq.push({ delay: 0, kind: "info", text: "Push notification 5 NCC mobile", sub: "Đang chờ phản hồi qua app NCC..." });
   seq.push({ delay: 600, kind: "info", text: "Mai liên hệ realtime qua FCM", sub: "Kênh ưu tiên: Zalo OA + SMS" });
 
   let t = 1200;
-  let nccCount = 15;
+  let nccCount = 5;
   let skuIdx = 4;
-  const PHASE2_DURATION = 28500;
+  const PHASE2_DURATION = 12000;
   const slot = (PHASE2_DURATION - 1200) / mobileNcc.length;
 
   mobileNcc.forEach((n, i) => {
-    if (i >= 19) return; // 19 NCC reply (15 → 34, còn 2 offline)
+    if (i >= 4) return; // 4 NCC reply (5 → 9, còn 1 offline)
     seq.push({ delay: t, kind: "ncc-call", text: `Push notify ${n}...`, sub: "Chờ NCC mở app" });
     t += slot * 0.3 + rand(50, 200);
     const replyN = 3 + Math.floor(rand(2, 10));
@@ -1527,22 +1523,18 @@ function generatePhase2Events(matched: ReturnType<typeof useRequest>["lines"]): 
     }
 
     // misc events
-    if (i === 4) {
+    if (i === 2) {
       seq.push({ delay: t, kind: "info", text: "Phát hiện 2 mã chưa có NCC tốt", sub: "Mở rộng tìm kiếm..." });
-      t += slot * 0.2;
-    }
-    if (i === 8) {
-      seq.push({ delay: t, kind: "info", text: "Matching mã rẻ nhất qua so sánh chéo", sub: "Tối ưu allocation NCC" });
       t += slot * 0.2;
     }
 
     nccCount++;
-    if (nccCount % 4 === 0 || nccCount === 34) {
+    if (nccCount % 4 === 0 || nccCount === 9) {
       seq.push({
         delay: t,
         kind: "info",
-        text: `${nccCount}/36 NCC đã báo giá`,
-        sub: nccCount === 34 ? "Còn 2 NCC chưa phản hồi" : "",
+        text: `${nccCount}/10 NCC đã báo giá`,
+        sub: nccCount === 9 ? "Còn 1 NCC chưa phản hồi" : "",
       });
       t += slot * 0.18;
     }
@@ -1550,8 +1542,8 @@ function generatePhase2Events(matched: ReturnType<typeof useRequest>["lines"]): 
   });
 
   // 2 events cuối: chuẩn bị hoàn tất + tổng kết
-  seq.push({ delay: 28200, kind: "info", text: "Chuẩn bị hoàn tất giai đoạn 2...", sub: "So sánh giá tốt nhất từ tất cả NCC" });
-  seq.push({ delay: 29400, kind: "ncc-done", text: "✓ Hoàn tất giai đoạn 2", sub: "34/36 NCC đã báo giá · 2 NCC offline" });
+  seq.push({ delay: 11000, kind: "info", text: "Chuẩn bị hoàn tất giai đoạn 2...", sub: "So sánh giá tốt nhất từ tất cả NCC" });
+  seq.push({ delay: 12000, kind: "ncc-done", text: "✓ Hoàn tất giai đoạn 2", sub: "9/10 NCC đã báo giá · 1 NCC offline" });
 
   return seq;
 }

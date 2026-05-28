@@ -79,7 +79,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen lg:h-screen flex flex-col items-center justify-center pt-1 pb-8 overflow-hidden bg-[#F8FAFF]">
+    <section className="relative min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)] flex flex-col items-center pt-10 sm:pt-12 pb-8 bg-[#F8FAFF]">
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
         <div
           className="absolute inset-y-0 -top-[10%] w-full h-[120%] transition-all duration-75 gsap-parallax"
@@ -218,28 +218,28 @@ export default function Hero() {
 
             <div className="flex flex-row flex-nowrap items-center justify-start lg:justify-between gap-2 text-[11px] font-bold overflow-x-auto scrollbar-none w-full">
               <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[12px] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
-                <span className="w-4.5 h-4.5 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-[10px] font-bold">1</span>
+                <span className="w-6 h-6 shrink-0 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
                 <span className="text-[#334155] whitespace-nowrap">Tìm kiếm & bóc tách</span>
               </div>
 
               <span className="text-[#A5B4FC] font-bold text-xs shrink-0">&gt;</span>
 
               <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[12px] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
-                <span className="w-4.5 h-4.5 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-[10px] font-bold">2</span>
+                <span className="w-6 h-6 shrink-0 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
                 <span className="text-[#334155] whitespace-nowrap">Chốt mã sản phẩm</span>
               </div>
 
               <span className="text-[#A5B4FC] font-bold text-xs shrink-0">&gt;</span>
 
               <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[12px] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
-                <span className="w-4.5 h-4.5 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-[10px] font-bold">3</span>
+                <span className="w-6 h-6 shrink-0 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
                 <span className="text-[#334155] whitespace-nowrap">Kết nối NCC</span>
               </div>
 
               <span className="text-[#A5B4FC] font-bold text-xs shrink-0">&gt;</span>
 
               <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-[12px] border border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.02)] shrink-0">
-                <span className="w-4.5 h-4.5 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-[10px] font-bold">4</span>
+                <span className="w-6 h-6 shrink-0 bg-[#4F46E5] text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
                 <span className="text-[#334155] whitespace-nowrap">Đặt hàng & thanh toán</span>
               </div>
             </div>

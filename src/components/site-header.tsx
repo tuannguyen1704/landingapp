@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, CheckCircle2, FileText, CreditCard, Receipt, Check, Plus, User, LogOut, Settings } from "lucide-react";
+import { Search, CheckCircle2, FileText, CreditCard, Receipt, Check, Plus, User, LogOut, Settings, ChevronRight } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { UserAvatar } from "@/components/user-avatar";
@@ -53,6 +53,13 @@ export function SiteHeader() {
     reset();
     router.push("/app");
   };
+
+  const isProfileRoute = pathname.startsWith("/app/profile");
+
+  if (isProfileRoute) {
+    // Profile page has its own sidebar and breadcrumb, don't render header
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
@@ -187,7 +194,7 @@ export function SiteHeader() {
                   {/* Menu items */}
                   <div className="py-1">
                     <Link
-                      href="/profile"
+                      href="/app/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                     >
@@ -195,7 +202,7 @@ export function SiteHeader() {
                       Tài khoản
                     </Link>
                     <Link
-                      href="/profile"
+                      href="/app/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors"
                     >

@@ -32,11 +32,14 @@ const ITEMS: Item[] = [
 ];
 
 function isItemActive(item: Item, pathname: string): boolean {
-  // Exact match hoặc match chính xác với sub-path
+  // Exact match - always check this first
   if (pathname === item.path) return true;
-  // Nếu pathname là sub-path của item.path (VD: /app/catalog thuộc về /app/catalog)
-  // Nhưng không match nhầm parent path (VD: /app không thuộc /app/catalog)
-  if (pathname.startsWith(item.path + "/")) return true;
+
+  // Sub-path matching: only for items that are NOT root-level (depth > 1)
+  // This prevents "/app" from matching "/app/orders"
+  const pathDepth = (item.path.match(/\//g) || []).length;
+  if (pathDepth > 1 && pathname.startsWith(item.path + "/")) return true;
+
   return false;
 }
 

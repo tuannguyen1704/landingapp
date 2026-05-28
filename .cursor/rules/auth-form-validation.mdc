@@ -1,0 +1,68 @@
+---
+description: Auth form validation rules for email and password inputs
+globs: src/components/ui/mai-*.tsx
+alwaysApply: false
+---
+
+# Auth Form Validation Rules
+
+## Email Validation
+
+For email inputs in login and registration forms:
+
+- **Must validate on blur**: When user leaves the email input field, immediately show error if validation fails
+- **Domain requirement**: Email MUST contain either `@gmail` or `@email` domain (case-insensitive)
+- **Error message**: "Email phải có đuôi @gmail hoặc @email"
+- **Regex pattern**: `/@(gmail|email)\./i`
+
+```typescript
+// Email validation on blur
+const handleEmailBlur = () => {
+  if (email && !/@(gmail|email)\./i.test(email)) {
+    setErrors(prev => ({ ...prev, email: 'Email phải có đuôi @gmail hoặc @email' }));
+  } else {
+    setErrors(prev => ({ ...prev, email: undefined }));
+  }
+};
+```
+
+## Password Validation
+
+For password inputs in login and registration forms:
+
+- **Must validate on blur**: When user leaves the password input field, immediately show error if validation fails
+- **Minimum length**: Password must be at least 3 characters
+- **Error message**: "Mật khẩu phải ít nhất 3 ký tự"
+- **Clear error on valid**: Remove error when password meets requirements
+
+```typescript
+// Password validation on blur
+const handlePasswordBlur = () => {
+  if (password && password.length < 3) {
+    setErrors(prev => ({ ...prev, password: 'Mật khẩu phải ít nhất 3 ký tự' }));
+  } else {
+    setErrors(prev => ({ ...prev, password: undefined }));
+  }
+};
+```
+
+## Blur Behavior
+
+- **On blur (field lost focus)**: Validate the field and show error message below input
+- **While typing after error shown**: Clear error when user starts typing (already implemented via onChange)
+- **Error display**: Show red text with error icon below the input field
+
+## Login Success Redirect
+
+When login/register is successful:
+
+- **Close modal**: Call `closeModal()` after successful authentication
+- **Delay**: Use `setTimeout(() => closeModal(), 1500)` to allow success message to show
+
+```typescript
+const handleLoginSuccess = (username: string, userData?: { email: string }) => {
+  // ... existing login logic ...
+  showToast(`Đăng nhập thành công! Chào mừng ${username}`, "success");
+  setTimeout(() => closeModal(), 1500);
+};
+```

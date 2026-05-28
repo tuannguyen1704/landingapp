@@ -190,7 +190,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const updateUser = useCallback((data: Partial<AuthUser>) => {
-    setUser((prev) => (prev ? { ...prev, ...data } : null));
+    setUser((prev) => {
+      if (prev) {
+        return { ...prev, ...data };
+      }
+      // If no prev user, create new user from data (data should be complete AuthUser)
+      return data as AuthUser;
+    });
   }, []);
 
   return (

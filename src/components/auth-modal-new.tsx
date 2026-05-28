@@ -12,6 +12,7 @@ export function AuthModalNew() {
   const [isLogin, setIsLogin] = useState(true);
   const [isFlipping, setIsFlipping] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [formKey, setFormKey] = useState(0);
 
   useEffect(() => {
     if (mode !== "welcome") {
@@ -27,6 +28,19 @@ export function AuthModalNew() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [isOpen, closeModal]);
+
+  // Reset panel position khi modal thay đổi trạng thái
+  useEffect(() => {
+    setIsLogin(true);
+    setIsFlipping(false);
+  }, [isOpen]);
+
+  // Reset forms khi modal đóng
+  useEffect(() => {
+    if (!isOpen) {
+      setFormKey(k => k + 1);
+    }
+  }, [isOpen]);
 
   if (!isOpen || mode === "welcome") return null;
 
@@ -46,14 +60,14 @@ export function AuthModalNew() {
     if (isFlipping || !isLogin) return;
     setIsFlipping(true);
     setTimeout(() => setIsLogin(false), 280);
-    setTimeout(() => setIsFlipping(false), 560);
+    setTimeout(() => setIsFlipping(false), 750);
   };
 
   const handleSwitchToLogin = () => {
     if (isFlipping || isLogin) return;
     setIsFlipping(true);
     setTimeout(() => setIsLogin(true), 280);
-    setTimeout(() => setIsFlipping(false), 560);
+    setTimeout(() => setIsFlipping(false), 750);
   };
 
   const handleLoginSuccess = (username: string, userData?: { email: string }) => {
@@ -73,9 +87,20 @@ export function AuthModalNew() {
         createdAt: loggedInUser.createdAt,
       };
       updateUser(authUser);
+    } else {
+      // For demo credentials, create user directly
+      const authUser: AuthUser = {
+        id: `user-${username}`,
+        name: username,
+        email: userData?.email || username,
+        createdAt: new Date().toISOString(),
+      };
+      updateUser(authUser);
     }
 
     showToast(`Đăng nhập thành công! Chào mừng ${username}`, "success");
+    // Close modal after successful login
+    setTimeout(() => closeModal(), 1500);
   };
 
   const handleRegisterSuccess = (username: string, email?: string) => {
@@ -88,8 +113,9 @@ export function AuthModalNew() {
     };
     updateUser(authUser);
 
-    showToast(`Tài khoản ${username} đã được tạo thành công!`, "success");
-    setTimeout(() => handleSwitchToLogin(), 1500);
+    showToast(`Đăng nhập thành công! Chào mừng ${username}`, "success");
+    // Close modal after successful registration
+    setTimeout(() => closeModal(), 2000);
   };
 
   const handleShowError = (message: string) => {
@@ -178,6 +204,7 @@ export function AuthModalNew() {
           <div className="absolute left-0 top-0 bottom-0 w-1/2 flex items-center justify-center p-8">
             <div className="w-full max-w-[380px] flex flex-col justify-center mt-8">
               <RegisterForm
+                key={`register-${formKey}`}
                 onRegisterSuccess={handleRegisterSuccess}
                 onShowError={handleShowError}
                 onSwitchToLogin={handleSwitchToLogin}
@@ -189,6 +216,7 @@ export function AuthModalNew() {
           <div className="absolute right-0 top-0 bottom-0 w-1/2 flex items-center justify-center p-8">
             <div className="w-full max-w-[380px]">
               <LoginForm
+                key={`login-${formKey}`}
                 onLoginSuccess={handleLoginSuccess}
                 onShowError={handleShowError}
                 onForgotPassword={handleForgotPassword}
@@ -199,7 +227,8 @@ export function AuthModalNew() {
 
           {/* SLIDING OVERLAY PANEL */}
           <motion.div
-            className="absolute top-0 bottom-0 z-20 overflow-hidden bg-gradient-to-br from-[#6366F1] via-[#8B5CF6] to-[#A855F7]"
+            className="absolute top-0 bottom-0 z-20 overflow-hidden bg-gradient-to-br from-[#4C2889] via-[#5B21B6] to-[#3B82F6]"
+            initial={false}
             animate={{
               left: panelStyle.left,
               right: panelStyle.right,
@@ -209,32 +238,12 @@ export function AuthModalNew() {
               borderBottomRightRadius: panelStyle.borderBottomRightRadius,
             }}
             transition={{
-              left: { type: "spring", stiffness: 95, damping: 18, mass: 1 },
-              right: { type: "spring", stiffness: 95, damping: 18, mass: 1 },
-              borderTopLeftRadius: {
-                type: "spring",
-                stiffness: 95,
-                damping: 18,
-                mass: 1,
-              },
-              borderTopRightRadius: {
-                type: "spring",
-                stiffness: 95,
-                damping: 18,
-                mass: 1,
-              },
-              borderBottomLeftRadius: {
-                type: "spring",
-                stiffness: 95,
-                damping: 18,
-                mass: 1,
-              },
-              borderBottomRightRadius: {
-                type: "spring",
-                stiffness: 95,
-                damping: 18,
-                mass: 1,
-              },
+              left: { type: "spring", stiffness: 100, damping: 20 },
+              right: { type: "spring", stiffness: 100, damping: 20 },
+              borderTopLeftRadius: { type: "spring", stiffness: 100, damping: 20 },
+              borderTopRightRadius: { type: "spring", stiffness: 100, damping: 20 },
+              borderBottomLeftRadius: { type: "spring", stiffness: 100, damping: 20 },
+              borderBottomRightRadius: { type: "spring", stiffness: 100, damping: 20 },
             }}
           >
             {/* Ambient Glow Effects */}

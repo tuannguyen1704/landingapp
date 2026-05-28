@@ -2,10 +2,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import gsap from '@/lib/animations';
+import { useAuth } from "@/components/auth-provider";
+import { UserAvatar } from "@/components/user-avatar";
+import { User, LogOut } from 'lucide-react';
 
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const lastScrollY = useRef(0);
+  const { user, openModal, logout } = useAuth();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -40,6 +46,18 @@ export default function Navbar() {
     };
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [dropdownOpen]);
+
   return (
     <nav
       id="navbar"
@@ -67,7 +85,38 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-2.5 sm:gap-4">
-          <button className="text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors py-1.5 px-1">Đăng nhập</button>
+          {user ? (
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setDropdownOpen((o) => !o)}
+                className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full hover:bg-indigo-50 transition-colors"
+              >
+                <UserAvatar name={user.name} size="sm" />
+                <span className="text-sm font-medium text-slate-700">{user.name}</span>
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border py-1 z-50">
+                  <div className="px-4 py-2 border-b">
+                    <p className="text-sm font-semibold">{user.name}</p>
+                    <p className="text-xs text-slate-500">{user.email}</p>
+                  </div>
+                  <button
+                    onClick={() => { setDropdownOpen(false); logout(); }}
+                    className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    <LogOut className="h-4 w-4" /> Đăng xuất
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => openModal("login")}
+              className="text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors py-1.5 px-1"
+            >
+              Đăng nhập
+            </button>
+          )}
           <Link href="/app" className="bg-indigo-600 text-white px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-md shadow-indigo-200 hover:scale-[1.03] active:scale-[0.97] transition-all inline-block">
             Dùng thử m.ai
           </Link>

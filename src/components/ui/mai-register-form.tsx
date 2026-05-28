@@ -23,6 +23,24 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailStr);
   };
 
+  // Email validation on blur - must contain @gmail or @email
+  const handleEmailBlur = () => {
+    if (email && !/@(gmail|email)\./i.test(email)) {
+      setErrors((prev) => ({ ...prev, email: 'Email phải có đuôi @gmail hoặc @email' }));
+    } else {
+      setErrors((prev) => ({ ...prev, email: undefined }));
+    }
+  };
+
+  // Password validation on blur - minimum 3 characters
+  const handlePasswordBlur = () => {
+    if (password && password.length < 3) {
+      setErrors((prev) => ({ ...prev, password: 'Mật khẩu phải ít nhất 3 ký tự' }));
+    } else {
+      setErrors((prev) => ({ ...prev, password: undefined }));
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { username?: string; email?: string; password?: string } = {};
@@ -41,8 +59,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
     if (!password) {
       newErrors.password = 'Vui lòng nhập mật khẩu';
-    } else if (password.length < 6) {
-      newErrors.password = 'Mật khẩu phải chứa ít nhất 6 ký tự';
+    } else if (password.length < 3) {
+      newErrors.password = 'Mật khẩu phải ít nhất 3 ký tự';
+    } else if (!/@(gmail|email)\./i.test(email)) {
+      newErrors.email = 'Email phải có đuôi @gmail hoặc @email';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -132,6 +152,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           setEmail(e.target.value);
           if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
         }}
+        onBlur={handleEmailBlur}
         error={errors.email}
       />
 
@@ -146,6 +167,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           setPassword(e.target.value);
           if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
         }}
+        onBlur={handlePasswordBlur}
         error={errors.password}
       />
     </FormWrapper>
